@@ -1,23 +1,46 @@
-implement Java program that uses lambda expressions and Stream API to filter students who scored above 75%, sort them by marks, and display their names.
+import java.util.*;
+import java.util.stream.Collectors;
 
-Step 1: Create the Student Class
-- Define a Student class with attributes:
-    name (String)
-    marks (double)
-- Implement a constructor to initialize these values.
-- Add a display method to print student details.
+class Student {
+    String name;
+    double marks;
 
-Step 2: Create the StudentFilterSort Class
-- Create a list of students with sample data.
-- Use Streams Class to:
-      Filter students who scored above 75%.
-      Sort students by marks in descending order.
-      Collect the results into a new list.
-- Use forEach() with a method reference to display results.ts.
+    // Constructor
+    public Student(String name, double marks) {
+        this.name = name;
+        this.marks = marks;
+    }
 
+    // Display method
+    public void display() {
+        System.out.println(name + " (Marks: " + marks + ")");
+    }
+}
 
-Test Case	                        Input Data	                                                 Expected Output
-Case 1:         Normal Case	Alice (80), Bob (72), Charlie (90), David (65), Eve (85)	         Charlie, Eve, Alice (Sorted by marks)
-Case 2:         All Below 75%	Bob (70), David (60), Frank (65)	                               No output (Empty List)
-Case 3:         Same Marks	Alice (80), Bob (80), Charlie (85)                                 Charlie, Alice, Bob (Sorted by marks, then by name)
-Case 4:         Single Student Above 75%	Alice (60), Bob (50), Charlie (90)	                 Charlie (Only one student)
+public class StudentFilterSort {
+    public static void main(String[] args) {
+        // Creating a list of students
+        List<Student> students = new ArrayList<>();
+        students.add(new Student("Alice", 80));
+        students.add(new Student("Bob", 72));
+        students.add(new Student("Charlie", 90));
+        students.add(new Student("David", 65));
+        students.add(new Student("Eve", 85));
+
+        System.out.println("Students who scored above 75%, sorted by marks:");
+        
+        // Filtering students with marks > 75%, sorting in descending order, and collecting results
+        List<Student> filteredStudents = students.stream()
+            .filter(student -> student.marks > 75)  // Filter students above 75%
+            .sorted(Comparator.comparingDouble((Student student) -> -student.marks)
+                .thenComparing(student -> student.name))  // Sort by marks (descending) & name (ascending)
+            .collect(Collectors.toList());
+
+        // Displaying the sorted students
+        if (filteredStudents.isEmpty()) {
+            System.out.println("No students scored above 75%.");
+        } else {
+            filteredStudents.forEach(Student::display);
+        }
+    }
+}
